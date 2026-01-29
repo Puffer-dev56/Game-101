@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainPlayer : MonoBehaviour
 {
@@ -7,6 +9,9 @@ public class MainPlayer : MonoBehaviour
     private bool isJumping;
     public float speed;
     public float jumpForce;
+    private int scoreCount;
+    public Text scoreUI;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -17,7 +22,8 @@ public class MainPlayer : MonoBehaviour
         moveX = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveX * speed,rb.linearVelocity.y);
         if (Input.GetButtonDown("Jump") && !isJumping) {
-            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpForce)); 
+            rb.AddForce(new Vector2(rb.linearVelocity.x, jumpForce));
+            jumpForce = Random.Range(100,1000);
         }
     }
 
@@ -39,6 +45,15 @@ public class MainPlayer : MonoBehaviour
         if (target.gameObject.CompareTag("Item"))
         {
             Destroy(target.gameObject);
+            scoreCount += 10;
+            Debug.Log(scoreCount);
+            scoreUI.text = "Score = " + scoreCount.ToString();
+        } 
+        else if(target.gameObject.CompareTag("Enemy"))
+        {
+            //make a player disappear
+            //gameObject.SetActive(false);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);//load this scene again
         }
     }
 }
