@@ -4,16 +4,25 @@ using UnityEngine.UI;
 
 public class MainPlayer : MonoBehaviour
 {
+    //player behavior
     private Rigidbody2D rb;
     private float moveX;
     private bool isJumping;
     public float speed;
     public float jumpForce;
+
+    //score
     private int scoreCount;
     public Text scoreUI;
 
+    //audio
+    public AudioClip coin;
+    public AudioClip JumpSound;
+    private AudioSource audioSource;
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -24,6 +33,7 @@ public class MainPlayer : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !isJumping) {
             rb.AddForce(new Vector2(rb.linearVelocity.x, jumpForce));
             jumpForce = Random.Range(100,1000);
+            audioSource.PlayOneShot(JumpSound);
         }
     }
 
@@ -48,6 +58,7 @@ public class MainPlayer : MonoBehaviour
             scoreCount += 10;
             Debug.Log(scoreCount);
             scoreUI.text = "Score = " + scoreCount.ToString();
+            audioSource.PlayOneShot(coin);
         } 
         else if(target.gameObject.CompareTag("Enemy"))
         {
